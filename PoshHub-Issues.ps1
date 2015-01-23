@@ -11,7 +11,7 @@ function New-GithubIssue{
         [Parameter (Mandatory=$True)] [string] $Account = $(throw "Please specify required Github Account with -Account parameter"),
         [Parameter (Mandatory=$True)] [string] $Repo    = $(throw "Please specify required Repository Name with the -Repo paramter"),
         [Parameter (Mandatory=$True)] [string] $Title   = $(throw "Please specify required Issue Title with the -Title parameter"),
-        [Parameter (Mandatory=$False)][string] $Body    = $Null
+        [Parameter (Mandatory=$False)][string] $IssueBody
     )
 
     Get-GithubAccount($Account)
@@ -31,13 +31,13 @@ function New-GithubIssue{
 
         $url = "https://api.github.com/repos/$($Credentials.AccountName)/$Repo/issues"
 
-        $body = "{""title"":""$Title"",""body"":""$Body""}"
-        Invoke-RestMethod -Uri $url -Headers $Headers -Body $body -Method Post
-        }
-    catch {
+        $RestMethodBody = "{""title"":""$Title"",""body"":""$IssueBody""}"
+
+        Invoke-RestMethod -Uri $url -Headers $Headers -Body $RestMethodBody -Method Post
+        } 
+        catch {
         Invoke-Exception($_.Exception)
         }
-}    
 <#
  .SYNOPSIS
  Bulk delete of objects in containers.
